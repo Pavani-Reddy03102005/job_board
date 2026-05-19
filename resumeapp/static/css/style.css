@@ -1,58 +1,43 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-
 *{
     margin:0;
     padding:0;
     box-sizing:border-box;
 }
-
 body{
     font-family:'Poppins',sans-serif;
     background:#020617;
     color:white;
     overflow-x:hidden;
 }
-
 /* NAVBAR */
-
 nav{
     width:100%;
     height:90px;
     padding:0 80px;
-
     display:flex;
     justify-content:space-between;
     align-items:center;
-
     background:rgba(15,23,42,0.8);
     backdrop-filter:blur(10px);
-
     position:fixed;
     top:0;
     z-index:1000;
-
     border-bottom:1px solid rgba(255,255,255,0.1);
 }
-
 .logo{
     font-size:32px;
     font-weight:700;
-
     background:linear-gradient(to right,#38bdf8,#8b5cf6);
-
     background-clip:text;
     -webkit-background-clip:text;
-
     color:transparent;
     -webkit-text-fill-color:transparent;
 }
-
 .nav-links{
     display:flex;
     gap:18px;
 }
-
 .nav-links a{
     text-decoration:none;
     color:white;
@@ -61,50 +46,38 @@ nav{
     border-radius:12px;
     transition:0.3s;
 }
-
 .nav-links a:hover{
     background:#38bdf8;
     color:black;
     transform:translateY(-2px);
 }
-
 /* HERO SECTION */
-
 .hero{
     min-height:100vh;
-
     display:flex;
     justify-content:center;
     align-items:center;
     flex-direction:column;
-
     text-align:center;
     padding:120px 20px 40px;
-
     background:
     radial-gradient(circle at top left,#1e3a8a 0%,transparent 30%),
     radial-gradient(circle at bottom right,#7c3aed 0%,transparent 30%),
     #020617;
 }
-
 .hero h1{
     font-size:82px;
     line-height:1.1;
     margin-bottom:25px;
     font-weight:700;
 }
-
 .hero span{
-
     background:linear-gradient(to right,#38bdf8,#8b5cf6);
-
     background-clip:text;
     -webkit-background-clip:text;
-
     color:transparent;
     -webkit-text-fill-color:transparent;
 }
-
 .hero p{
     width:70%;
     font-size:20px;
@@ -112,7 +85,6 @@ nav{
     line-height:1.8;
     margin-bottom:40px;
 }
-
 .hero-btn{
     padding:18px 45px;
     border:none;
@@ -123,228 +95,163 @@ nav{
     font-weight:600;
     cursor:pointer;
     transition:0.4s;
-
     box-shadow:0 10px 30px rgba(56,189,248,0.3);
 }
-
 .hero-btn:hover{
     transform:translateY(-5px) scale(1.03);
 }
-
 /* FEATURE CARDS */
-
 .features{
     padding:80px;
-
     display:grid;
     grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
     gap:30px;
 }
-
 .feature-card{
     background:rgba(30,41,59,0.7);
     border:1px solid rgba(255,255,255,0.08);
-
     backdrop-filter:blur(10px);
-
     padding:40px 30px;
     border-radius:25px;
-
     transition:0.4s;
 }
-
 .feature-card:hover{
     transform:translateY(-12px);
     box-shadow:0 20px 40px rgba(0,0,0,0.4);
 }
-
 .feature-card h2{
     margin-bottom:18px;
     font-size:28px;
-
     color:#38bdf8;
 }
-
 .feature-card p{
     color:#cbd5e1;
     line-height:1.8;
 }
-
 /* FORM DESIGN */
-
 .form-container{
     width:500px;
     margin:140px auto 60px;
-
     background:rgba(30,41,59,0.75);
     backdrop-filter:blur(12px);
-
     border:1px solid rgba(255,255,255,0.1);
-
     padding:50px;
     border-radius:30px;
 }
-
 .form-container h1{
     text-align:center;
     margin-bottom:30px;
     font-size:40px;
 }
-
 .form-container input,
 .form-container textarea,
 .form-container select{
     width:100%;
     padding:16px;
     margin-bottom:20px;
-
     border:none;
     border-radius:15px;
-
     background:#0f172a;
     color:white;
-
     font-size:16px;
 }
-
 .form-container button{
     width:100%;
     padding:16px;
-
     border:none;
     border-radius:15px;
-
     background:linear-gradient(to right,#38bdf8,#8b5cf6);
-
     color:white;
     font-size:18px;
     font-weight:600;
-
     cursor:pointer;
-
     transition:0.3s;
 }
-
 .form-container button:hover{
     transform:scale(1.02);
 }
-
 /* RESULT PAGE */
-
 .result-box{
     width:85%;
     margin:140px auto 60px;
-
     background:rgba(30,41,59,0.75);
     backdrop-filter:blur(10px);
-
     border:1px solid rgba(255,255,255,0.08);
-
     padding:50px;
     border-radius:30px;
 }
-
 .result-box h1{
     font-size:50px;
     margin-bottom:30px;
 }
-
 .progress{
     width:100%;
     height:35px;
-
     background:#0f172a;
     border-radius:30px;
-
     overflow:hidden;
 }
-
 .progress-bar{
     height:100%;
-
     background:linear-gradient(to right,#38bdf8,#8b5cf6);
-
     border-radius:30px;
 }
-
 .skill{
     display:inline-block;
-
     padding:12px 20px;
     margin:8px;
-
     border-radius:12px;
-
     background:linear-gradient(to right,#38bdf8,#8b5cf6);
-
     color:white;
     font-weight:500;
 }
-
 /* DASHBOARD */
-
 .dashboard-cards{
     margin-top:140px;
-
     padding:50px;
-
     display:grid;
     grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
     gap:30px;
 }
-
 .dashboard-card{
     background:rgba(30,41,59,0.75);
     padding:40px;
     border-radius:25px;
-
     border:1px solid rgba(255,255,255,0.08);
-
     transition:0.3s;
 }
-
 .dashboard-card:hover{
     transform:translateY(-10px);
 }
-
 .dashboard-card h2{
     color:#38bdf8;
     margin-bottom:15px;
 }
-
 .dashboard-card h1{
     font-size:45px;
 }
-
 /* MOBILE */
-
 @media(max-width:768px){
-
     nav{
         flex-direction:column;
         height:auto;
         padding:20px;
     }
-
     .nav-links{
         flex-wrap:wrap;
         justify-content:center;
         margin-top:15px;
     }
-
     .hero h1{
         font-size:50px;
     }
-
     .hero p{
         width:95%;
         font-size:18px;
     }
-
     .features{
         padding:30px;
     }
-
     .form-container{
         width:90%;
     }
