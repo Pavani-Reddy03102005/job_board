@@ -1,0 +1,65 @@
+{% extends 'resumeapp/base.html' %}
+
+{% block content %}
+
+<section class="hero">
+
+    <h1>
+        AI Powered
+        <span>Resume Analyzer</span>
+    </h1>
+
+    <p>
+        Improve your placement opportunities using AI.
+        Upload resumes, calculate ATS score, analyze skills,
+        and match with top companies instantly.
+    </p>
+
+    <a href="{% url 'upload_resume' %}">
+
+        <button class="hero-btn">
+            Upload Resume
+        </button>
+
+    </a>
+
+</section>
+
+<section class="features">
+
+    <div class="feature-card">
+
+        <h2>ATS Score</h2>
+
+        <p>
+            Analyze resume quality using advanced ATS technology.
+            Improve recruiter visibility instantly.
+        </p>
+
+    </div>
+
+    <div class="feature-card">
+
+        <h2>Skill Extraction</h2>
+
+        <p>
+            Automatically extract technical and soft skills
+            from uploaded resumes.
+        </p>
+
+    </div>
+
+    <div class="feature-card">
+
+        <h2>Company Matching</h2>
+
+        <p>
+            Compare resumes with Google, Amazon,
+            TCS, Infosys and more.
+        </p>
+
+    </div>
+
+</section>
+
+{% endblock %}

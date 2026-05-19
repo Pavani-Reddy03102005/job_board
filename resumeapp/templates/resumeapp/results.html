@@ -1,0 +1,69 @@
+{% extends 'resumeapp/base.html' %}
+
+{% block content %}
+
+<div class="result-box">
+
+    <h1>Resume Analysis</h1>
+
+    <h2>ATS Score</h2>
+
+    <br>
+
+    <div class="progress">
+
+        <div class="progress-bar"
+             style="width:{{ resume.ats_score }}%;">
+
+        </div>
+
+    </div>
+
+    <br>
+
+    <h2>{{ resume.ats_score }}%</h2>
+
+    <br><br>
+
+    <h2>AI Summary</h2>
+
+    <br>
+
+    <p>
+        {{ resume.summary }}
+    </p>
+
+    <br><br>
+
+    <h2>Skills</h2>
+
+    <br>
+
+    {% for skill in skills %}
+
+        <span class="skill">
+            {{ skill }}
+        </span>
+
+    {% endfor %}
+
+    <br><br>
+
+    <h2>Company Match</h2>
+
+    <br>
+
+    <p>Google : {{ resume.google_score }}%</p>
+    <br>
+
+    <p>Amazon : {{ resume.amazon_score }}%</p>
+    <br>
+
+    <p>TCS : {{ resume.tcs_score }}%</p>
+    <br>
+
+    <p>Infosys : {{ resume.infosys_score }}%</p>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,68 @@
+{% extends 'resumeapp/base.html' %}
+
+{% block content %}
+
+<div style="width:400px;margin:auto;">
+
+    <h1>Register</h1>
+
+    <br>
+
+    {% if messages %}
+
+        {% for message in messages %}
+
+            <p>{{ message }}</p>
+
+        {% endfor %}
+
+    {% endif %}
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        <input type="text"
+               name="username"
+               placeholder="Username"
+               required
+               style="width:100%;padding:12px;">
+
+        <br><br>
+
+        <input type="email"
+               name="email"
+               placeholder="Email"
+               required
+               style="width:100%;padding:12px;">
+
+        <br><br>
+
+        <input type="password"
+               name="password"
+               placeholder="Password"
+               required
+               style="width:100%;padding:12px;">
+
+        <br><br>
+
+        <input type="password"
+               name="confirm_password"
+               placeholder="Confirm Password"
+               required
+               style="width:100%;padding:12px;">
+
+        <br><br>
+
+        <button type="submit"
+                style="padding:12px 20px;">
+
+            Register
+
+        </button>
+
+    </form>
+
+</div>
+
+{% endblock %}

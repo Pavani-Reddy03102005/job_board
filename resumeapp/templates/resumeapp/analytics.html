@@ -1,0 +1,49 @@
+{% extends 'resumeapp/base.html' %}
+
+{% block content %}
+
+<h2 class="mb-4">
+    Analytics
+</h2>
+
+<div class="row">
+
+    <div class="col-md-4">
+
+        <div class="card p-4">
+
+            <h5>Total Uploads</h5>
+
+            <h2>{{ total_resumes }}</h2>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-4">
+
+        <div class="card p-4">
+
+            <h5>Highest ATS Score</h5>
+
+            <h2>{{ highest_score }}%</h2>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-4">
+
+        <div class="card p-4">
+
+            <h5>Average Match</h5>
+
+            <h2>{{ avg_match }}%</h2>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
