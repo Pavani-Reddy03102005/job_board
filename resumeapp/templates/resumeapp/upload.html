@@ -4,21 +4,73 @@
 
 <div class="form-container">
 
-    <h1>Upload Resume</h1>
+    <h1>📄 Upload Resume</h1>
+
+    <p class="upload-subtitle">
+        Upload your resume, then choose how you want it analysed.
+    </p>
+
+    {% if form.non_field_errors %}
+    <div class="alert error">{{ form.non_field_errors }}</div>
+    {% endif %}
 
     <form method="POST"
-          enctype="multipart/form-data">
+          enctype="multipart/form-data"
+          id="uploadForm">
 
         {% csrf_token %}
 
-        {{ form.as_p }}
+        <div class="form-group">
 
-        <button type="submit">
-            Upload Resume
+            <label for="{{ form.resume_file.id_for_label }}">
+                Resume File
+            </label>
+
+            {{ form.resume_file }}
+
+            {% for error in form.resume_file.errors %}
+            <div class="alert error" style="margin-top:14px;">{{ error }}</div>
+            {% endfor %}
+
+        </div>
+
+        <button
+            type="submit"
+            id="uploadBtn"
+            class="btn btn-primary upload-full-btn">
+
+            🚀 Upload &amp; Continue
+
         </button>
 
     </form>
 
+    <div class="upload-info">
+
+        <h3>Supported Formats</h3>
+
+        <ul>
+
+            <li>✅ PDF (.pdf) with selectable text</li>
+
+            <li>✅ DOCX (.docx)</li>
+
+            <li>✅ Max Size : 5 MB</li>
+
+            <li>⚠️ Scanned or image-only PDFs cannot be read (OCR is not available yet)</li>
+
+        </ul>
+
+    </div>
+
 </div>
+
+<script>
+document.getElementById('uploadForm').addEventListener('submit', function () {
+    var btn = document.getElementById('uploadBtn');
+    btn.disabled = true;
+    btn.textContent = 'Reading your resume…';
+});
+</script>
 
 {% endblock %}

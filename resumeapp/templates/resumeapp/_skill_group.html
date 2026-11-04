@@ -1,0 +1,39 @@
+{% if group.matched %}
+<h4>Supported by your resume</h4>
+<ul class="an-evidence">
+    {% for e in group.matched %}
+    <li>
+        <span class="skill">{{ e.skill }}</span>
+        {% if e.demonstrated %}
+        <span class="an-badge an-b-pass">Shown in {{ e.where|join:", " }}</span>
+        {% elif e.demonstrated == False %}
+        <span class="an-badge an-b-warn">Listed only in {{ e.where|join:", " }}</span>
+        {% endif %}
+        {% if e.snippet %}<div class="an-snippet">“{{ e.snippet }}”</div>{% endif %}
+    </li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+{% if group.unclear %}
+<h4>Evidence unclear (related skills found)</h4>
+<ul class="an-evidence">
+    {% for item in group.unclear %}
+    <li>
+        <span class="skill an-muted">{{ item.skill }}</span>
+        <span class="an-badge an-b-warn">Related: {{ item.related|join:", " }}</span>
+    </li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+{% if group.unverified %}
+<h4>Not mentioned in your resume (unverified)</h4>
+<div class="skills-container">
+    {% for skill in group.unverified %}<span class="skill an-muted">{{ skill }}</span>{% endfor %}
+</div>
+{% endif %}
+
+{% if not group.matched and not group.unclear and not group.unverified %}
+<p class="an-hint">No recognised skills were found in this part of the job description.</p>
+{% endif %}

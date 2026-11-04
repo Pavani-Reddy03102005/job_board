@@ -1,0 +1,131 @@
+/* Extra styles for the Dashboard and Analytics pages.
+   Loaded AFTER style.css (via {% block extra_css %}). It only adds new
+   "ra-" classes and one modifier (.chart-panel.ra-auto), so nothing in
+   style.css is overridden or duplicated. */
+
+.chart-panel.ra-auto{
+    min-height:0;
+    margin:0 0 30px;
+}
+
+.ra-note{
+    color:#94a3b8;
+    font-size:13px;
+    line-height:1.7;
+    margin:-20px 4px 40px;
+}
+
+.ra-chart{
+    position:relative;
+    height:340px;
+}
+
+.ra-chart-sm{
+    height:300px;
+}
+
+.ra-empty{
+    text-align:center;
+    color:var(--text-light);
+    padding:40px 0;
+}
+
+.ra-empty-icon{
+    font-size:48px;
+    margin-bottom:10px;
+}
+
+.empty-box h2{
+    margin-bottom:10px;
+}
+
+.empty-box .upload-btn{
+    margin-top:25px;
+}
+
+.ra-two-col{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:30px;
+    margin-bottom:0;
+}
+
+/* score bar on each resume card */
+.ra-bar{
+    height:8px;
+    border-radius:30px;
+    background:#0f172a;
+    overflow:hidden;
+}
+
+.ra-fill{
+    height:100%;
+    border-radius:30px;
+}
+
+.ra-fill-green{ background:#22c55e; }
+.ra-fill-orange{ background:#f59e0b; }
+.ra-fill-red{ background:#ef4444; }
+
+.ra-label{
+    font-size:13px;
+    font-weight:600;
+    margin:10px 0 22px;
+}
+
+.ra-text-green{ color:#4ade80; }
+.ra-text-orange{ color:#fbbf24; }
+.ra-text-red{ color:#f87171; }
+
+/* doughnut legend */
+.ra-legend{
+    list-style:none;
+    margin-top:20px;
+    display:grid;
+    gap:10px;
+    color:var(--text-light);
+    font-size:14px;
+}
+
+.ra-legend strong{
+    color:#fff;
+}
+
+.ra-dot{
+    display:inline-block;
+    width:10px;
+    height:10px;
+    border-radius:50%;
+    margin-right:8px;
+}
+
+/* insights */
+.ra-insights{
+    list-style:none;
+    display:grid;
+    gap:12px;
+}
+
+.ra-insights li{
+    padding:16px 20px;
+    border-radius:14px;
+    background:var(--card2);
+    border-left:3px solid var(--primary);
+    color:var(--text-light);
+    line-height:1.7;
+}
+
+@media(max-width:992px){
+    .ra-two-col{
+        grid-template-columns:1fr;
+    }
+}
+
+@media(max-width:576px){
+    .ra-chart{
+        height:280px;
+    }
+    .ra-note{
+        margin-top:-10px;
+    }
+}

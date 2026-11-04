@@ -17,7 +17,17 @@ urlpatterns = [
 
     path('upload/', views.upload_resume, name='upload_resume'),
 
+    # Choose analysis mode (general / job-specific) for an uploaded resume
+    path('analyze/<int:id>/', views.analyze_resume, name='analyze'),
+
     path('results/<int:id>/', views.results, name='results'),
+
+    # Delete Resume
+    path(
+        'resume/<int:id>/delete/',
+        views.delete_resume,
+        name='delete_resume'
+    ),
 
     path('analytics/', views.analytics, name='analytics'),
 ]

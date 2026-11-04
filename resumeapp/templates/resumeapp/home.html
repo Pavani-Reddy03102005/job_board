@@ -1,62 +1,194 @@
 {% extends 'resumeapp/base.html' %}
+{% load static %}
 
 {% block content %}
 
+<!-- HERO SECTION -->
+
 <section class="hero">
 
-    <h1>
-        AI Powered
-        <span>Resume Analyzer</span>
-    </h1>
+    <div class="container fade-in">
 
-    <p>
-        Improve your placement opportunities using AI.
-        Upload resumes, calculate ATS score, analyze skills,
-        and match with top companies instantly.
-    </p>
+        <h1>
+            AI Powered
+            <span>Resume Analyzer</span>
+        </h1>
 
-    <a href="{% url 'upload_resume' %}">
+        <p>
+            Improve your placement opportunities using AI.
+            Upload your resume, calculate ATS score, extract skills,
+            generate summaries, and match with top companies instantly.
+        </p>
 
-        <button class="hero-btn">
-            Upload Resume
-        </button>
+        <a href="{% url 'resumeapp:upload_resume' %}" class="btn btn-primary">
+            🚀 Upload Resume
+        </a>
 
-    </a>
+    </div>
 
 </section>
 
-<section class="features">
 
-    <div class="feature-card">
+<!-- FEATURES -->
 
-        <h2>ATS Score</h2>
+<section>
 
-        <p>
-            Analyze resume quality using advanced ATS technology.
-            Improve recruiter visibility instantly.
-        </p>
+    <div class="container">
+
+        <div class="features">
+
+            <div class="feature-card">
+
+                <h2>📄 Resume Parsing</h2>
+
+                <p>
+                    Upload PDF or DOCX resumes and automatically
+                    extract all important information using AI.
+                </p>
+
+            </div>
+
+            <div class="feature-card">
+
+                <h2>⭐ ATS Score</h2>
+
+                <p>
+                    Instantly calculate ATS score and discover
+                    how well your resume performs.
+                </p>
+
+            </div>
+
+            <div class="feature-card">
+
+                <h2>💼 Company Matching</h2>
+
+                <p>
+                    Compare your resume against company
+                    requirements including Google, Amazon,
+                    Infosys and TCS.
+                </p>
+
+            </div>
+
+            <div class="feature-card">
+
+                <h2>🧠 Skill Extraction</h2>
+
+                <p>
+                    Detect technical and soft skills from
+                    your resume automatically using NLP.
+                </p>
+
+            </div>
+
+            <div class="feature-card">
+
+                <h2>📝 AI Summary</h2>
+
+                <p>
+                    Generate a concise professional summary
+                    from your resume in seconds.
+                </p>
+
+            </div>
+
+            <div class="feature-card">
+
+                <h2>📊 Analytics Dashboard</h2>
+
+                <p>
+                    Track uploaded resumes, ATS performance,
+                    company matching and resume statistics.
+                </p>
+
+            </div>
+
+        </div>
 
     </div>
 
-    <div class="feature-card">
+</section>
 
-        <h2>Skill Extraction</h2>
 
-        <p>
-            Automatically extract technical and soft skills
-            from uploaded resumes.
-        </p>
+<!-- HOW IT WORKS -->
+
+<section>
+
+    <div class="container">
+
+        <div class="section-title text-center">
+
+            <h2>How It Works</h2>
+
+            <p>
+                Three simple steps to analyze your resume
+            </p>
+
+        </div>
+
+        <div class="features">
+
+            <div class="feature-card">
+
+                <h2>1️⃣ Upload</h2>
+
+                <p>
+                    Upload your PDF or DOCX resume securely.
+                </p>
+
+            </div>
+
+            <div class="feature-card">
+
+                <h2>2️⃣ Analyze</h2>
+
+                <p>
+                    AI extracts text, skills,
+                    ATS score and generates insights.
+                </p>
+
+            </div>
+
+            <div class="feature-card">
+
+                <h2>3️⃣ Improve</h2>
+
+                <p>
+                    View recommendations and increase your
+                    chances of getting shortlisted.
+                </p>
+
+            </div>
+
+        </div>
 
     </div>
 
-    <div class="feature-card">
+</section>
 
-        <h2>Company Matching</h2>
 
-        <p>
-            Compare resumes with Google, Amazon,
-            TCS, Infosys and more.
+<!-- CALL TO ACTION -->
+
+<section>
+
+    <div class="container text-center">
+
+        <h2 style="font-size:40px; margin-bottom:20px;">
+            Ready to Build a Better Resume?
+        </h2>
+
+        <p style="max-width:750px;margin:auto;color:#cbd5e1;line-height:1.8;margin-bottom:35px;">
+
+            Let AI evaluate your resume, calculate ATS score,
+            identify missing skills and improve your chances
+            of landing your dream job.
+
         </p>
+
+        <a href="{% url 'resumeapp:upload_resume' %}" class="btn btn-primary">
+            Get Started
+        </a>
 
     </div>
 

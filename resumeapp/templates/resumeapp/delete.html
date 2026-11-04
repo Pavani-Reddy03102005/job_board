@@ -1,0 +1,35 @@
+{% extends 'resumeapp/base.html' %}
+
+{% block content %}
+
+<div class="form-container">
+
+    <h1>Delete Resume</h1>
+
+    <p class="text-center mb-2" style="color:#cbd5e1;">
+        Are you sure you want to delete this resume?
+    </p>
+
+    <p class="text-center mb-3">
+        <strong>{{ resume.resume_file.name|cut:"resumes/" }}</strong>
+    </p>
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        <button type="submit" class="btn btn-danger">
+            Delete Resume
+        </button>
+
+    </form>
+
+    <a href="{% url 'dashboard' %}"
+       class="btn btn-primary mt-2"
+       style="display:block; text-align:center;">
+        Cancel
+    </a>
+
+</div>
+
+{% endblock %}

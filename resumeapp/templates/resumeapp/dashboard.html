@@ -1,78 +1,164 @@
 {% extends 'resumeapp/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+{% endblock %}
 
 {% block content %}
 
-<h2 class="mb-4">
-    Dashboard
-</h2>
+<div class="dashboard-wrap">
 
-<div class="row">
-
-    <div class="col-md-3">
-
-        <div class="card p-3">
-
-            <h5>Total Resumes</h5>
-
-            <h2>{{ total_resumes }}</h2>
-
+    <!-- Header -->
+    <div class="dashboard-header">
+        <div>
+            <h1>Dashboard</h1>
+            <p>
+                Welcome back,
+                <strong>{{ request.user.username }}</strong> 👋
+            </p>
         </div>
 
-    </div>
-
-    <div class="col-md-3">
-
-        <div class="card p-3">
-
-            <h5>Average ATS Score</h5>
-
-            <h2>{{ avg_ats }}</h2>
-
-        </div>
-
-    </div>
-
-</div>
-
-<hr class="mt-5">
-
-<h3>Uploaded Resumes</h3>
-
-<div class="row">
-
-{% for resume in resumes %}
-
-<div class="col-md-6 mt-4">
-
-    <div class="card p-4">
-
-        <h4>
-            Resume {{ forloop.counter }}
-        </h4>
-
-        <p>
-            Uploaded:
-            {{ resume.uploaded_at }}
-        </p>
-
-        <p>
-            ATS Score:
-            {{ resume.ats_score }}%
-        </p>
-
-        <a href="{% url 'results' resume.id %}"
-           class="btn btn-success">
-
-           View Analysis
-
+        <a href="{% url 'upload_resume' %}" class="upload-btn">
+            + Upload Resume
         </a>
+    </div>
+
+    <!-- Statistics -->
+    <div class="dashboard-grid">
+
+        <div class="dashboard-card">
+            <div class="card-icon total-icon">📄</div>
+            <div>
+                <h3>Total Resumes</h3>
+                <h2>{{ total_resumes }}</h2>
+            </div>
+        </div>
+
+        <div class="dashboard-card">
+            <div class="card-icon avg-icon">⭐</div>
+            <div>
+                <h3>Average ATS Score</h3>
+                <h2>{{ avg_ats }}%</h2>
+            </div>
+        </div>
+
+        <div class="dashboard-card">
+            <div class="card-icon high-icon">🏆</div>
+            <div>
+                <h3>Highest ATS Score</h3>
+                <h2>{{ highest_ats }}%</h2>
+            </div>
+        </div>
+
+        <div class="dashboard-card">
+            <div class="card-icon success-icon">📈</div>
+            <div>
+                <h3>Match Success Rate</h3>
+                <h2>{{ success_rate }}%</h2>
+            </div>
+        </div>
+
+    </div>
+
+    <p class="ra-note">
+        Calculated from your {{ total_resumes }} uploaded resume{{ total_resumes|pluralize }}.
+        Success rate = share of resumes scoring {{ success_threshold }}% or higher.
+        ATS scores estimate keyword compatibility and do not guarantee any hiring outcome.
+    </p>
+
+    <!-- Trend chart -->
+    <div class="chart-panel ra-auto">
+        <div class="section-title">
+            <h2>ATS Score Trend</h2>
+            <p>Your ATS performance over time</p>
+        </div>
+
+        <div class="ra-chart"><canvas id="trendChart"></canvas></div>
+        <p class="ra-empty" id="trendEmpty" hidden>
+            No resumes yet. Upload a resume to see your score trend.
+        </p>
+    </div>
+
+    <!-- Resume cards -->
+    <div class="resume-section">
+
+        <div class="section-title">
+            <h2>Recent Uploads</h2>
+            <p>Your uploaded resumes, newest first</p>
+        </div>
+
+        {% if resumes %}
+
+        <div class="resume-grid">
+
+            {% for resume in resumes %}
+
+            <div class="resume-card">
+
+                <div class="resume-top">
+                    <h3>{{ resume.display_name }}</h3>
+                    <span class="ats-pill {{ resume.score_color }}">{{ resume.ats_score }}%</span>
+                </div>
+
+                <p class="resume-date">
+                    Uploaded : {{ resume.uploaded_at|date:"d M Y" }}
+                </p>
+
+                <div class="ra-bar">
+                    <div class="ra-fill ra-fill-{{ resume.score_color }}"
+                         style="width: {{ resume.score_pct }}%"></div>
+                </div>
+                <p class="ra-label ra-text-{{ resume.score_color }}">{{ resume.score_label }}</p>
+
+                <div class="resume-actions">
+
+                    <a href="{% url 'results' resume.id %}"
+                       class="action-btn view-btn">
+                        👁 View
+                    </a>
+
+                    {% if resume.resume_file %}
+                    <a href="{{ resume.resume_file.url }}"
+                       class="action-btn download-btn"
+                       download>
+                        ⬇ Download
+                    </a>
+                    {% endif %}
+
+                    <a href="{% url 'delete_resume' resume.id %}"
+                       class="action-btn delete-btn">
+                        🗑 Delete
+                    </a>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+        {% else %}
+
+        <div class="empty-box">
+            <div class="ra-empty-icon">📂</div>
+            <h2>No Resume Uploaded Yet</h2>
+            <p>Upload your first resume to begin AI analysis.</p>
+            <a href="{% url 'upload_resume' %}" class="upload-btn">
+                Upload Resume
+            </a>
+        </div>
+
+        {% endif %}
 
     </div>
 
 </div>
 
-{% endfor %}
+{% endblock %}
 
-</div>
-
+{% block extra_js %}
+{{ chart_data|json_script:"chart-data" }}
+<script src="{% static 'js/charts.js' %}"></script>
 {% endblock %}

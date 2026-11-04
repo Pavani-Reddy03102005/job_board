@@ -1,68 +1,257 @@
 {% extends 'resumeapp/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/analysis.css' %}">
+{% endblock %}
 
 {% block content %}
 
-<div class="result-box">
+<div class="an-wrap">
 
-    <h1>Resume Analysis</h1>
-
-    <h2>ATS Score</h2>
-
-    <br>
-
-    <div class="progress">
-
-        <div class="progress-bar"
-             style="width:{{ resume.ats_score }}%;">
-
+    <!-- Header -->
+    <div class="an-head">
+        <div>
+            <h1>Resume Analysis</h1>
+            <p class="an-meta">
+                {{ display_name }} · {{ analysis.get_mode_display }} ·
+                {{ analysis.created_at|date:"d M Y, H:i" }}
+            </p>
         </div>
+        <div class="an-actions">
+            <a class="btn btn-primary" href="{% url 'analyze' resume.id %}">Run another analysis</a>
+            <a class="an-link" href="{% url 'dashboard' %}">Back to dashboard</a>
+        </div>
+    </div>
+
+    <!-- Scores -->
+    <div class="an-scores">
+
+        <div class="an-score">
+            <h3>Resume quality</h3>
+            <div class="an-big">{{ report.quality.score }}<span>/100</span></div>
+            <div class="an-bar"><div class="an-fill {% if report.quality.score >= 80 %}an-good{% elif report.quality.score >= 60 %}an-ok{% else %}an-low{% endif %}" style="width: {{ report.quality.score }}%"></div></div>
+            <p class="an-hint">Checklist score: sections, contact details, bullet wording and length.</p>
+        </div>
+
+        <div class="an-score">
+            <h3>ATS compatibility</h3>
+            <div class="an-big">{{ report.ats.score }}<span>/100</span></div>
+            <div class="an-bar"><div class="an-fill {% if report.ats.score >= 80 %}an-good{% elif report.ats.score >= 60 %}an-ok{% else %}an-low{% endif %}" style="width: {{ report.ats.score }}%"></div></div>
+            <p class="an-hint">How easily software can read your file. Not an employer's ATS score.</p>
+        </div>
+
+        {% if report.job_match %}
+        <div class="an-score">
+            <h3>Estimated job match</h3>
+            <div class="an-big">{{ report.job_match.overall }}<span>%</span></div>
+            <div class="an-bar"><div class="an-fill {% if report.job_match.overall >= 80 %}an-good{% elif report.job_match.overall >= 60 %}an-ok{% else %}an-low{% endif %}" style="width: {{ report.job_match.overall }}%"></div></div>
+            <p class="an-hint">{{ report.job_match.label }} match · confidence: {{ report.job_match.confidence }}. An AI-free estimate, not a hiring prediction.</p>
+        </div>
+        {% endif %}
 
     </div>
 
-    <br>
+    <details class="an-details">
+        <summary>How are these numbers calculated, and what are their limits?</summary>
+        <ul class="an-list">
+            {% for line in report.limitations %}<li>{{ line }}</li>{% endfor %}
+        </ul>
+    </details>
 
-    <h2>{{ resume.ats_score }}%</h2>
+    <!-- Overview -->
+    <section class="an-panel">
+        <h2>Resume overview</h2>
+        <p class="an-sub">Only information actually found in your uploaded file is shown.</p>
 
-    <br><br>
+        {% if report.overview.text_only_fallback %}
+        <div class="alert warning">The original file could not be re-read, so layout checks (tables, columns) were limited.</div>
+        {% endif %}
 
-    <h2>AI Summary</h2>
+        <div class="an-grid-2">
+            <div>
+                <h4>Sections detected</h4>
+                <div class="skills-container">
+                    {% for name in report.overview.sections_found %}<span class="skill">{{ name }}</span>{% empty %}<span class="an-hint">None detected</span>{% endfor %}
+                </div>
+                {% if report.overview.sections_missing %}
+                <p class="an-hint">Not detected: {{ report.overview.sections_missing|join:", " }}</p>
+                {% endif %}
+            </div>
+            <div>
+                <h4>Contact details detected</h4>
+                <ul class="an-list">
+                    {% for item in report.overview.contact %}
+                    <li>{% if item.found %}✅{% else %}➖{% endif %} {{ item.label }}</li>
+                    {% endfor %}
+                </ul>
+                <p class="an-hint">Only whether each item was found is shown, not the details themselves.</p>
+            </div>
+        </div>
 
-    <br>
+        <h4>Technical skills found</h4>
+        {% for category, names in report.overview.skills_by_category.items %}
+        <p class="an-cat">{{ category }}</p>
+        <div class="skills-container">{% for n in names %}<span class="skill">{{ n }}</span>{% endfor %}</div>
+        {% empty %}
+        <p class="an-hint">No skills from the built-in catalogue were recognised.</p>
+        {% endfor %}
 
-    <p>
-        {{ resume.summary }}
-    </p>
+        <div class="an-stats">
+            <div><strong>{{ report.overview.stats.words }}</strong><span>words</span></div>
+            <div><strong>{{ report.overview.stats.bullets }}</strong><span>bullet points</span></div>
+            <div><strong>{{ report.overview.stats.measurable_bullets }}</strong><span>bullets with numbers</span></div>
+            <div><strong>{{ report.overview.stats.action_verb_bullets }}</strong><span>bullets with action verbs</span></div>
+        </div>
 
-    <br><br>
+        {% if report.overview.section_text %}
+        <h4>Extracted text by section</h4>
+        <p class="an-hint">Check that your content was read correctly.</p>
+        {% for label, text in report.overview.section_text.items %}
+        <details class="an-details"><summary>{{ label }}</summary><pre class="an-pre">{{ text }}</pre></details>
+        {% endfor %}
+        {% endif %}
+    </section>
 
-    <h2>Skills</h2>
+    <!-- Job match -->
+    {% if report.job_match %}
+    {% with jm=report.job_match %}
+    <section class="an-panel">
+        <h2>Job match: {{ jm.job_title }}{% if jm.company %} at {{ jm.company }}{% endif %}</h2>
+        <p class="an-sub">{{ jm.confidence_note }}</p>
 
-    <br>
+        <div class="an-cov">
+            <div>
+                <span>Required skills covered</span>
+                {% if jm.coverage.required is None %}<strong>n/a</strong>{% else %}
+                <strong>{{ jm.coverage.required }}%</strong>
+                <div class="an-bar"><div class="an-fill an-good" style="width: {{ jm.coverage.required }}%"></div></div>{% endif %}
+            </div>
+            <div>
+                <span>Preferred skills covered</span>
+                {% if jm.coverage.preferred is None %}<strong>n/a</strong>{% else %}
+                <strong>{{ jm.coverage.preferred }}%</strong>
+                <div class="an-bar"><div class="an-fill an-ok" style="width: {{ jm.coverage.preferred }}%"></div></div>{% endif %}
+            </div>
+            <div>
+                <span>Text similarity</span>
+                <strong>{{ jm.coverage.similarity }}%</strong>
+                <div class="an-bar"><div class="an-fill an-ok" style="width: {{ jm.coverage.similarity }}%"></div></div>
+            </div>
+        </div>
+        <p class="an-hint">A skill that is not mentioned is shown as unverified, not as proof that you lack it.</p>
 
-    {% for skill in skills %}
+        <h3>Required skills</h3>
+        {% include 'resumeapp/_skill_group.html' with group=jm.required %}
 
-        <span class="skill">
-            {{ skill }}
-        </span>
+        <h3>Preferred skills</h3>
+        {% include 'resumeapp/_skill_group.html' with group=jm.preferred %}
 
-    {% endfor %}
+        {% if jm.recommendations %}
+        <h3>How to improve the match</h3>
+        <ul class="an-list an-recs">
+            {% for rec in jm.recommendations %}<li>{{ rec }}</li>{% endfor %}
+        </ul>
+        {% endif %}
 
-    <br><br>
+        <details class="an-details"><summary>How the estimate is calculated</summary><p>{{ jm.method }}</p></details>
+    </section>
+    {% endwith %}
+    {% endif %}
 
-    <h2>Company Match</h2>
+    <!-- Strengths / weaknesses -->
+    <div class="an-grid-2">
+        <section class="an-panel">
+            <h2>Strengths</h2>
+            <ul class="an-list an-strengths">
+                {% for s in report.strengths %}<li>{{ s }}</li>{% empty %}<li class="an-hint">No clear strengths were detected yet.</li>{% endfor %}
+            </ul>
+        </section>
+        <section class="an-panel">
+            <h2>Weaknesses</h2>
+            <ul class="an-list an-weaknesses">
+                {% for w in report.weaknesses %}
+                <li>
+                    <span class="an-prio an-p-{{ w.priority }}">{{ w.priority|capfirst }}</span>
+                    {{ w.text }}
+                    {% if w.recommendation %}<div class="an-rec">💡 {{ w.recommendation }}</div>{% endif %}
+                </li>
+                {% empty %}<li class="an-hint">No weaknesses were detected.</li>{% endfor %}
+            </ul>
+        </section>
+    </div>
 
-    <br>
+    {% if report.missing_evidence %}
+    <section class="an-panel">
+        <h2>Missing evidence</h2>
+        <ul class="an-list">
+            {% for m in report.missing_evidence %}
+            <li>{{ m.text }}<div class="an-rec">💡 {{ m.recommendation }}</div></li>
+            {% endfor %}
+        </ul>
+    </section>
+    {% endif %}
 
-    <p>Google : {{ resume.google_score }}%</p>
-    <br>
+    {% if report.role_suggestions %}
+    <section class="an-panel">
+        <h2>Job categories suggested by your skills</h2>
+        <p class="an-sub">Based only on the skills found in your resume. These are indications, not recommendations to apply.</p>
+        <div class="an-roles">
+            {% for r in report.role_suggestions %}
+            <div class="an-role">
+                <strong>{{ r.role }}</strong>
+                <span>{{ r.match_percent }}% of typical skills found</span>
+                <div class="skills-container">{% for s in r.matched %}<span class="skill">{{ s }}</span>{% endfor %}</div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
 
-    <p>Amazon : {{ resume.amazon_score }}%</p>
-    <br>
+    <!-- Detailed checks -->
+    <section class="an-panel">
+        <h2>Resume quality checks</h2>
+        <p class="an-sub">Each check shows the points earned, the evidence and what to do about it.</p>
+        {% include 'resumeapp/_checks.html' with checks=report.quality.checks %}
+    </section>
 
-    <p>TCS : {{ resume.tcs_score }}%</p>
-    <br>
+    <section class="an-panel">
+        <h2>ATS compatibility checks</h2>
+        <p class="an-sub">Indicators of machine readability, not the result of any real employer system.</p>
+        {% include 'resumeapp/_checks.html' with checks=report.ats.checks %}
+    </section>
 
-    <p>Infosys : {{ resume.infosys_score }}%</p>
+    {% if show_company_match %}
+    <section class="an-panel">
+        <h2>Company keyword match</h2>
+        <p class="an-sub">Keyword similarity with the company profiles saved in the admin area.</p>
+        <ul class="an-list">
+            <li>Google: {{ resume.google_score }}%</li>
+            <li>Amazon: {{ resume.amazon_score }}%</li>
+            <li>TCS: {{ resume.tcs_score }}%</li>
+            <li>Infosys: {{ resume.infosys_score }}%</li>
+        </ul>
+    </section>
+    {% endif %}
+
+    <!-- History -->
+    {% if history|length > 1 %}
+    <section class="an-panel">
+        <h2>Analysis history</h2>
+        <ul class="an-history">
+            {% for h in history %}
+            <li {% if h.id == analysis.id %}class="an-current"{% endif %}>
+                <a href="{% url 'results' resume.id %}?a={{ h.id }}">{{ h.created_at|date:"d M Y, H:i" }}</a>
+                <span>{{ h.get_mode_display }}</span>
+                <span>Quality {{ h.quality_score }}</span>
+                <span>ATS {{ h.ats_score }}</span>
+                {% if h.job_match_percentage is not None %}<span>Match {{ h.job_match_percentage }}%</span>{% endif %}
+                {% if h.id == analysis.id %}<em>viewing</em>{% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+    </section>
+    {% endif %}
 
 </div>
 

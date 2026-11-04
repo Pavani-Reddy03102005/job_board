@@ -1,0 +1,102 @@
+{% extends 'resumeapp/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/analysis.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="an-wrap an-narrow">
+
+    <div class="an-head">
+        <div>
+            <h1>Choose your analysis</h1>
+            <p class="an-meta">{{ display_name }} · uploaded {{ resume.uploaded_at|date:"d M Y" }}</p>
+        </div>
+    </div>
+
+    <form method="post" class="an-panel" id="analyzeForm">
+
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+        <div class="alert error">{{ form.non_field_errors }}</div>
+        {% endif %}
+
+        <div class="an-modes">
+            {% for radio in form.mode %}
+            <label class="an-mode" for="{{ radio.id_for_label }}">
+                {{ radio.tag }}
+                <span class="an-mode-body">
+                    <strong>{{ radio.choice_label }}</strong>
+                    <small>
+                        {% if radio.data.value == "job" %}
+                        Compare your resume with a specific job description: skill coverage,
+                        evidence and what to improve.
+                        {% else %}
+                        Resume quality, ATS compatibility, strengths, weaknesses and suitable
+                        job categories. No job description needed.
+                        {% endif %}
+                    </small>
+                </span>
+            </label>
+            {% endfor %}
+        </div>
+
+        <div id="jobFields" class="an-job-fields">
+
+            <div class="an-field">
+                <label for="{{ form.job_title.id_for_label }}">Job title</label>
+                {{ form.job_title }}
+                {% for error in form.job_title.errors %}<div class="an-error">{{ error }}</div>{% endfor %}
+            </div>
+
+            <div class="an-field">
+                <label for="{{ form.company.id_for_label }}">Company (optional)</label>
+                {{ form.company }}
+            </div>
+
+            <div class="an-field">
+                <label for="{{ form.job_description.id_for_label }}">Job description</label>
+                {{ form.job_description }}
+                {% for error in form.job_description.errors %}<div class="an-error">{{ error }}</div>{% endfor %}
+            </div>
+
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="analyzeBtn">Run analysis</button>
+
+        <p class="an-hint">
+            Results are estimates calculated from the text of your resume. They are not
+            an employer's ATS score and do not predict hiring decisions.
+        </p>
+
+    </form>
+
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function () {
+    var jobFields = document.getElementById('jobFields');
+    var radios = document.querySelectorAll('input[name="mode"]');
+
+    function sync() {
+        var checked = document.querySelector('input[name="mode"]:checked');
+        jobFields.hidden = !(checked && checked.value === 'job');
+    }
+
+    radios.forEach(function (r) { r.addEventListener('change', sync); });
+    sync();
+
+    document.getElementById('analyzeForm').addEventListener('submit', function () {
+        var btn = document.getElementById('analyzeBtn');
+        btn.disabled = true;
+        btn.textContent = 'Analysing…';
+    });
+})();
+</script>
+{% endblock %}

@@ -1,0 +1,16 @@
+<div class="an-checks">
+    {% for c in checks %}
+    <div class="an-check an-c-{{ c.status }}">
+        <div class="an-check-top">
+            <span class="an-badge an-b-{{ c.status }}">{{ c.status_label }}</span>
+            <strong>{{ c.title }}</strong>
+            {% if c.max_points %}<span class="an-points">{{ c.points }}/{{ c.max_points }}</span>{% endif %}
+            {% if c.status == "warn" or c.status == "fail" %}
+            <span class="an-prio an-p-{{ c.priority }}">{{ c.priority|capfirst }} priority</span>
+            {% endif %}
+        </div>
+        <p>{{ c.detail }}</p>
+        {% if c.recommendation %}<p class="an-rec">💡 {{ c.recommendation }}</p>{% endif %}
+    </div>
+    {% endfor %}
+</div>

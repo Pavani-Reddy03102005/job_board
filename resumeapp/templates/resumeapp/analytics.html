@@ -1,49 +1,152 @@
 {% extends 'resumeapp/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+{% endblock %}
 
 {% block content %}
 
-<h2 class="mb-4">
-    Analytics
-</h2>
+<div class="analytics-container">
 
-<div class="row">
+    <div class="dashboard-header">
+        <div>
+            <h1>Analytics Dashboard</h1>
+            <p>View resume performance and ATS statistics</p>
+        </div>
 
-    <div class="col-md-4">
+        <a href="{% url 'upload_resume' %}" class="upload-btn">
+            + Upload Resume
+        </a>
+    </div>
 
-        <div class="card p-4">
+    <!-- Summary cards (same numbers as the Dashboard) -->
+    <div class="dashboard-grid">
 
-            <h5>Total Uploads</h5>
+        <div class="dashboard-card">
+            <div class="card-icon total-icon">📄</div>
+            <div>
+                <h3>Total Resumes Analyzed</h3>
+                <h2>{{ total_resumes }}</h2>
+            </div>
+        </div>
 
-            <h2>{{ total_resumes }}</h2>
+        <div class="dashboard-card">
+            <div class="card-icon avg-icon">⭐</div>
+            <div>
+                <h3>Average ATS Score</h3>
+                <h2>{{ avg_ats }}%</h2>
+            </div>
+        </div>
 
+        <div class="dashboard-card">
+            <div class="card-icon high-icon">🏆</div>
+            <div>
+                <h3>Highest ATS Score</h3>
+                <h2>{{ highest_ats }}%</h2>
+            </div>
+        </div>
+
+        <div class="dashboard-card">
+            <div class="card-icon success-icon">📈</div>
+            <div>
+                <h3>Match Success Rate</h3>
+                <h2>{{ success_rate }}%</h2>
+            </div>
         </div>
 
     </div>
 
-    <div class="col-md-4">
+    <p class="ra-note">
+        Every uploaded resume is scored when it is uploaded, so all
+        {{ total_resumes }} resume{{ total_resumes|pluralize }} are included.
+        Success rate = share of resumes scoring {{ success_threshold }}% or higher.
+        ATS scores do not guarantee any hiring outcome.
+    </p>
 
-        <div class="card p-4">
+    <!-- Distribution + upload trend -->
+    <div class="ra-two-col">
 
-            <h5>Highest ATS Score</h5>
+        <div class="chart-panel ra-auto">
+            <div class="section-title">
+                <h2>ATS Score Distribution</h2>
+                <p>Each resume is counted exactly once</p>
+            </div>
 
-            <h2>{{ highest_score }}%</h2>
+            <div class="ra-chart ra-chart-sm"><canvas id="distChart"></canvas></div>
+            <p class="ra-empty" id="distEmpty" hidden>No resumes yet.</p>
 
+            {% if total_resumes %}
+            <ul class="ra-legend">
+                {% for row in distribution %}
+                <li>
+                    <span class="ra-dot ra-fill-{{ row.color }}"></span>
+                    {{ row.label }}: <strong>{{ row.count }}</strong> ({{ row.pct }}%)
+                </li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+
+        <div class="chart-panel ra-auto">
+            <div class="section-title">
+                <h2>Resume Upload Trends</h2>
+                <p id="uploadSubtitle">Uploads over time</p>
+            </div>
+
+            <div class="ra-chart ra-chart-sm"><canvas id="uploadChart"></canvas></div>
+            <p class="ra-empty" id="uploadEmpty" hidden>No uploads yet.</p>
         </div>
 
     </div>
 
-    <div class="col-md-4">
-
-        <div class="card p-4">
-
-            <h5>Average Match</h5>
-
-            <h2>{{ avg_match }}%</h2>
-
+    <!-- Performance -->
+    <div class="chart-panel ra-auto">
+        <div class="section-title">
+            <h2>ATS Score Performance</h2>
+            <p>Score of each resume (the latest 15 are shown)</p>
         </div>
 
+        <div class="ra-chart"><canvas id="perfChart"></canvas></div>
+        <p class="ra-empty" id="perfEmpty" hidden>No resumes yet.</p>
+    </div>
+
+    <!-- Skills (from the comma-separated Resume.skills field) -->
+    <div class="chart-panel ra-auto">
+        <div class="section-title">
+            <h2>Skills Distribution</h2>
+            <p>Most frequently detected skills across your resumes</p>
+        </div>
+
+        <div class="ra-chart"><canvas id="skillsChart"></canvas></div>
+        <p class="ra-empty" id="skillsEmpty" hidden>
+            No skills were detected in your resumes yet.
+        </p>
+    </div>
+
+    <!-- Insights -->
+    <div class="chart-panel ra-auto">
+        <div class="section-title">
+            <h2>Insights</h2>
+            <p>Based on your actual resume records</p>
+        </div>
+
+        {% if insights %}
+        <ul class="ra-insights">
+            {% for line in insights %}
+            <li>{{ line }}</li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p class="ra-empty">Upload a resume to see insights.</p>
+        {% endif %}
     </div>
 
 </div>
 
+{% endblock %}
+
+{% block extra_js %}
+{{ chart_data|json_script:"chart-data" }}
+<script src="{% static 'js/charts.js' %}"></script>
 {% endblock %}
