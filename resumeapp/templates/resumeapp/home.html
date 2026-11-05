@@ -1,12 +1,11 @@
+
 {% extends 'resumeapp/base.html' %}
 {% load static %}
 
 {% block content %}
 
 <!-- HERO SECTION -->
-
 <section class="hero">
-
     <div class="container fade-in">
 
         <h1>
@@ -20,165 +19,125 @@
             generate summaries, and match with top companies instantly.
         </p>
 
-        <a href="{% url 'resumeapp:upload_resume' %}" class="btn btn-primary">
+        <a href="{% url 'upload_resume' %}"
+           class="btn btn-primary">
             🚀 Upload Resume
         </a>
 
     </div>
-
 </section>
 
 
-<!-- FEATURES -->
-
+<!-- FEATURES SECTION -->
 <section>
-
     <div class="container">
 
         <div class="features">
 
             <div class="feature-card">
-
                 <h2>📄 Resume Parsing</h2>
-
                 <p>
                     Upload PDF or DOCX resumes and automatically
-                    extract all important information using AI.
+                    extract important information.
                 </p>
-
             </div>
 
             <div class="feature-card">
-
                 <h2>⭐ ATS Score</h2>
-
                 <p>
-                    Instantly calculate ATS score and discover
+                    Calculate your ATS score and discover
                     how well your resume performs.
                 </p>
-
             </div>
 
             <div class="feature-card">
-
                 <h2>💼 Company Matching</h2>
-
                 <p>
                     Compare your resume against company
                     requirements including Google, Amazon,
                     Infosys and TCS.
                 </p>
-
             </div>
 
             <div class="feature-card">
-
                 <h2>🧠 Skill Extraction</h2>
-
                 <p>
                     Detect technical and soft skills from
                     your resume automatically using NLP.
                 </p>
-
             </div>
 
             <div class="feature-card">
-
                 <h2>📝 AI Summary</h2>
-
                 <p>
                     Generate a concise professional summary
-                    from your resume in seconds.
+                    from your resume.
                 </p>
-
             </div>
 
             <div class="feature-card">
-
                 <h2>📊 Analytics Dashboard</h2>
-
                 <p>
                     Track uploaded resumes, ATS performance,
                     company matching and resume statistics.
                 </p>
-
             </div>
 
         </div>
-
     </div>
-
 </section>
 
 
 <!-- HOW IT WORKS -->
-
 <section>
-
     <div class="container">
 
         <div class="section-title text-center">
-
             <h2>How It Works</h2>
-
-            <p>
-                Three simple steps to analyze your resume
-            </p>
-
+            <p>Three simple steps to analyze your resume</p>
         </div>
 
         <div class="features">
 
             <div class="feature-card">
-
                 <h2>1️⃣ Upload</h2>
-
                 <p>
                     Upload your PDF or DOCX resume securely.
                 </p>
-
             </div>
 
             <div class="feature-card">
-
                 <h2>2️⃣ Analyze</h2>
-
                 <p>
-                    AI extracts text, skills,
-                    ATS score and generates insights.
+                    AI extracts text, skills, ATS score
+                    and generates insights.
                 </p>
-
             </div>
 
             <div class="feature-card">
-
                 <h2>3️⃣ Improve</h2>
-
                 <p>
-                    View recommendations and increase your
-                    chances of getting shortlisted.
+                    View recommendations and improve
+                    your resume.
                 </p>
-
             </div>
 
         </div>
-
     </div>
-
 </section>
 
 
 <!-- CALL TO ACTION -->
-
 <section>
-
     <div class="container text-center">
 
         <h2 style="font-size:40px; margin-bottom:20px;">
             Ready to Build a Better Resume?
         </h2>
 
-        <p style="max-width:750px;margin:auto;color:#cbd5e1;line-height:1.8;margin-bottom:35px;">
+        <p style="max-width:750px; margin:auto;
+                  color:#cbd5e1; line-height:1.8;
+                  margin-bottom:35px;">
 
             Let AI evaluate your resume, calculate ATS score,
             identify missing skills and improve your chances
@@ -186,12 +145,12 @@
 
         </p>
 
-        <a href="{% url 'resumeapp:upload_resume' %}" class="btn btn-primary">
+        <a href="{% url 'upload_resume' %}"
+           class="btn btn-primary">
             Get Started
         </a>
 
     </div>
-
 </section>
 
 {% endblock %}
